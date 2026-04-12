@@ -1,12 +1,31 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import connectDb from './config/db.js';
+import { createClient } from 'redis';
 
 dotenv.config();
 
 await connectDb();
 
+const redisUrl = process.env.REDIS_URL;
+
+if(!redisUrl){
+    console.log("missing redis url");
+    process.exit(1);
+}
+
+export const redisClient = createClient({
+    url: redisUrl
+});
+
+redisClient.on('error', (err) => console.log('Redis Error', err));
+
+await redisClient.connect(); 
+console.log('connected to redis');
 const app=express();
+
+//middlewares
+app.use(express.json());
 
 //importing routes
 import userRoutes from './routes/user.js';
