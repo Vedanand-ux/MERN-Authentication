@@ -1,17 +1,17 @@
-import {createTransport} from nodemailer;
+import {createTransport} from "nodemailer";
 
 const sendMail = async ({email,subject,html})=>{
   const transport = createTransport({
     host: "smtp.gmail.com",
     port: 465,
     auth: {
-      user: "fghjk",
-      password: "fghjk"
+      user: process.env.SMPT_USER,
+      pass: process.env.SMPT_PASSWORD
     }
   })
 
   await transport.sendMail({
-    from: "grefvrv",
+    from: process.env.SMPT_USER,
     to: email,
     subject,
     html
