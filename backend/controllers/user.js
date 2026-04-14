@@ -7,6 +7,7 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 import sendMail  from "../config/sendMail.js";
 import { getOtpHtml, getVerifyEmailHtml } from "../config/html.js";
+import { generateToken } from "../config/generateToken.js";
 
 
 export const registerUser = TryCatch(async (req,res)=>{
@@ -194,6 +195,44 @@ export const loginUser = TryCatch(async(req,res) =>{
 
   res.json({
     message: "OTP sent to your email. Please verify to complete login. OTP is valid for 5 minutes.",
-  })
+  });
 
 })
+
+export const verifyOtp = TryCatch(async(req,res) =>{
+    const {email,otp} = req.body;
+
+    if(!email || !otp){
+      return res.status(400).json({
+        message: "please provide all deatils"
+      });
+    }
+
+    const otpKey = `otp:${email}`;
+
+    const storedOtpString = await redisClient.get(otpKey);
+
+    if(!storedOtpString){
+      return res.status(404).json({
+        message: 'otp expired',
+      });
+    }
+
+    const storedOtp = JSON.parse(storedOtpString);
+
+    if(storedOtp !== otp){
+      return res.status(400).json({
+        message: "invalid otp",
+      })
+    }
+
+    await redisClient.del(otpKey);
+    let user = await User.findOne({email});
+
+    const tokenData = await generateToken(user._id,res);
+
+    res.status(200).json({
+      message: `welcome ${user.name}`,
+      user,
+    });
+  })
