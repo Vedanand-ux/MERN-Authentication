@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { server } from '../main';
@@ -10,6 +10,8 @@ const login = () => {
   const [password, setPassword] = useState("");
   const [btnLoading, setBtnLoading] = useState(false);
 
+  const navigate = useNavigate();
+
   const submitHandler = async(e) => {
     setBtnLoading(true);
     e.preventDefault();
@@ -18,6 +20,8 @@ const login = () => {
         email, password
       });
       toast.success(data.message);
+      localStorage.setItem("email", email);
+      navigate("/verifyotp");
 
     } catch (error) {
       toast.error(error.response.data.message);
@@ -42,7 +46,12 @@ const login = () => {
         required />
       </div>
       
-      
+      <div className="relative mb-4">
+        <label html="password" className="leading-7 text-sm text-gray-600">Password</label>
+        <input type="password" id="password" name="password" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" value={password}
+        onChange={e=>setPassword(e.target.value)}
+        required />
+      </div>
       <button className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg" disabled={btnLoading}>
         {btnLoading ? "Submitting..." : "Button"}
       </button>
