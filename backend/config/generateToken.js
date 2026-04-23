@@ -17,7 +17,7 @@ export const generateToken = async(id,res) => {
   res.cookie("accessToken",accessToken,{
     httpOnly: true,
     secure:true,
-    sameSite: "strict",
+    sameSite: "none",
     maxAge: 15 * 60 * 1000,
   })
 
@@ -25,7 +25,7 @@ export const generateToken = async(id,res) => {
     
     maxAge: 7*24*60*60*1000,
     httpOnly: true,
-    sameSite: "strict",
+    sameSite: "none",
     secure:true,
     })
 
