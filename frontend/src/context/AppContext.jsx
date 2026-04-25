@@ -2,6 +2,7 @@ import { createContext, useEffect, useState, useContext } from "react";
 import { server } from "../main";
 import axios from "axios";
 import api from "../apiIntercepter";
+import { toast } from "react-toastify";
 
 const AppContext = createContext(null);
 
@@ -26,13 +27,25 @@ export const AppProvider = ({ children }) => {
     }
   }
 
+  async function logoutUser() {
+    try{
+      const {data} = await api.post(`/api/v1/logout`);
+      toast.success(data.message);
+      setIsAuth(false);
+      setUser(null);
+
+    }catch(error){
+      toast.error("something went wrong");
+    }
+  }
+
   useEffect(() => {
     fetchUser();
   }, []);
 
   return (
     <AppContext.Provider
-      value={{ isAuth, setIsAuth, user, setUser, loading }}
+      value={{ isAuth, setIsAuth, user, setUser, loading, logoutUser }}
     >
       {children}
     </AppContext.Provider>
