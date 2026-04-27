@@ -16,7 +16,12 @@ export const VerifyOtp = () => {
     setBtnLoading(true);
     e.preventDefault();
 
-
+  const email = localStorage.getItem("email");
+    try{
+      const {data} = await axios.post(`${server}/api/v1/verify`,{email,otp},{
+        withCredentials: true,
+      }
+    );
 
       toast.success(data.message);
       setIsAuth(true);
