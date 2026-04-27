@@ -14,7 +14,7 @@ export const AppProvider = ({ children }) => {
   async function fetchUser() {
     setLoading(true);
     try {
-      const { data } = await api.get(`api/v1/me`);
+      const { data } = await api.get(`/api/v1/me`);
 
       setUser(data);
       setIsAuth(true);
@@ -27,15 +27,15 @@ export const AppProvider = ({ children }) => {
     }
   }
 
-  async function logoutUser() {
+  async function logoutUser(navigate) {
     try{
       const {data} = await api.post(`/api/v1/logout`);
       toast.success(data.message);
       setIsAuth(false);
       setUser(null);
-
+      navigate("/login");
     }catch(error){
-      toast.error("something went wrong");
+      toast.error(error?.response?.data?.message || "Logout failed");
     }
   }
 
