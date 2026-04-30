@@ -333,7 +333,7 @@ If the button doesn’t work, copy and paste this link into your browser:
 <a class="link" href="${verifyUrl}" target="_blank" rel="noopener">${verifyUrl}</a>
 </p>
 <p class="muted">
-If this wasn’t you, you can safely ignore this email.
+If this wasn’t you, Try changing your password.
 </p>
 </td>
 </tr>
