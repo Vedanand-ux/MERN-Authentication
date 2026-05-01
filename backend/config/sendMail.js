@@ -10,12 +10,7 @@ const sendMail = async ({email,subject,html})=>{
     }
   })
 
-  await transport.sendMail({
-    from: process.env.SMPT_USER,
-    to: email,
-    subject,
-    html
-  })
+
 }
 
 export default sendMail;
